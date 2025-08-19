@@ -3,6 +3,7 @@ class Person{
 	int age;
 	double height;
 	static String nation; //정적변수, 다른 객체간에 공유하는 변수
+	final int x=10; //final 변수는 직접 초기화 시켜줘야함!!
 }
 
 
@@ -10,6 +11,10 @@ public class Ex01_클래스 {
 
 	public static void main(String[] args) {
 		Person man = new Person();
+		
+		System.out.println(man.x);
+		//man.x=20; //final 변수이기에 값을 할당할수없다. 한번 설정하면 그대로끝
+		
 		System.out.println(man);
 		Person.nation="한국";
 		

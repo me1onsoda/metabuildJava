@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-class Person2 extends Object{ //자동으로 Object라는것이 상속
+class Person2 {
 
 	private String name;
 	private int age;
@@ -19,8 +19,8 @@ public class Ex16_송병곤 {
 	public static void main(String[] args) {
 		String name;
 		int age;
-		Scanner sc = new Scanner(System.in);
 		
+		Scanner sc = new Scanner(System.in);
 		Person2[] p = new Person2[3];
 		
 		for(int i=0; i<p.length; i++) {
