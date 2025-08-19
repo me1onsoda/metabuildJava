@@ -29,6 +29,14 @@ public class Ex15_객체배열 {
 		bk[0].display();
 		bk[1].display();
 		bk[2].display();
+		for(int i=0; i<bk.length; i++) {
+			bk[i].display();
+		}
+		System.out.println();
+		for (Book book : bk) {
+            book.display();
+        }
+		
 	}
 
 }
