@@ -23,11 +23,18 @@ public class Ex16_송병곤 {
 		Scanner sc = new Scanner(System.in);
 		Person2[] p = new Person2[3];
 		
+//		for(int i=0; i<p.length; i++) {
+//			System.out.print("이름:");
+//			name=sc.nextLine();
+//			System.out.print("나이:");
+//			age=Integer.parseInt(sc.nextLine());
+//			p[i] = new Person2(name, age);
+//		}
 		for(int i=0; i<p.length; i++) {
 			System.out.print("이름:");
-			name=sc.nextLine();
+			name=sc.next();
 			System.out.print("나이:");
-			age=Integer.parseInt(sc.nextLine());
+			age=sc.nextInt();
 			p[i] = new Person2(name, age);
 		}
 		for(Person2 person : p) {
