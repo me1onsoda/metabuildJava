@@ -104,6 +104,15 @@ public class Ex11_송병곤 {
 			System.out.println("월급:"+emp.getMonthPay());
 			System.out.println("----------------------");
 		}
+		try {
+		for(int i=0; i<4; i++) {
+			e[i].display();
+			System.out.println("월급:"+e[i].getMonthPay());
+			System.out.println("----------------------");
+		}
+		}catch(ArrayIndexOutOfBoundsException a) {
+			System.out.println("에러:없는 배열을 참조하려함("+a+")");
+		}
 	}
 
 }
