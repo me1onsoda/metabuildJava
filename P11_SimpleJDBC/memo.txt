@@ -1,0 +1,13 @@
+drop table test;
+
+create table test(
+	num number,
+	name varchar2(10),
+	addr varchar2(10)
+);
+
+insert into test values(1,'윤아','서울');
+insert into test values(2,'아이유','제주');
+commit;
+
+select * from test;
