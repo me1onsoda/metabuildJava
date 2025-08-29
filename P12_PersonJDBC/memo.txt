@@ -1,0 +1,21 @@
+
+drop sequence perseq;
+create sequence perseq
+	increment by 1
+	start with 1
+	minvalue 1;
+	
+	
+drop table person;
+create table person(
+	num number primary key,
+	name varchar(20),
+	age number,
+	gender varchar2(10),
+	birth date default sysdate
+	);
+	
+insert into person values(perseq.nextval, '정국', 30, '남자', '1992/3/4'); //무슨 칼럼을 넣겠다고 명시하지않았기떄문에
+insert into person values(perseq.nextval, '태연', 27, '여자', '1992/3/4'); //모든 값을 다 넣어야함
+insert into person values(perseq.nextval, '정연', 72, '여자', '1992/3/4');	//birth에 defalut라고 적어야함
+insert into person values(perseq.nextval, '지민', 31, '남자', default);

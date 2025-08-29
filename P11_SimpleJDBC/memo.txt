@@ -8,6 +8,18 @@ create table test(
 
 insert into test values(1,'윤아','서울');
 insert into test values(2,'아이유','제주');
-commit;
+insert into test values(3,'웬디','부산');
+commit;  // 커밋 하지않으면 연결된 이클립스에 반영되지않음
+
+
 
 select * from test;
+
+[jdbc 프로그래밍 단계]
+1. 드라이버 로드
+2. 계정에 접속
+3. sql문 작성-분석
+3.1 "insert into test(num,name,addr) values(?,?,?)" 인서트시 ?값 지정
+
+4. sql문 실행
+5. 접속 끊기
