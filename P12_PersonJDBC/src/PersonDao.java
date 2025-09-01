@@ -59,12 +59,11 @@ public class PersonDao { //DB
 		
 	}
 	
-	public ArrayList<PersonBean> getPersonByGender() {
+	public ArrayList<PersonBean> getPersonByGender(String inputGender) {
 		getConnect();
 		ArrayList<PersonBean> pbList = new ArrayList<>();
 		String sql = "select * from person where gender=?";
-		System.out.print("조회하고싶은 성별을 입력해주세요.(남자/여자)\n>>");
-		String inputGender = sc.nextLine();
+		
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, inputGender);
@@ -88,16 +87,82 @@ public class PersonDao { //DB
 	
 	public void updateData() {//정보 수정
 		getConnect();
-		String sql = "update person set num=?, name=?, addr=? where num=?";
+		int menu = 0;
+		int numKey = 0;
+		System.out.print("수정하려는 정보의 번호를 입력해주세요.\n>>");
+		numKey=Integer.parseInt(sc.nextLine()); 
+		PersonBean personToUpdate = getPersonByNum(numKey);
+
+		if (personToUpdate == null) {
+			System.out.println(numKey + "번 데이터가 존재하지 않습니다.");
+			return;
+		}
+		
+		
+		String sql = "select * from pesrson where num=?";
+		try {
+		ps = conn.prepareStatement(sql);
+		ps.setInt(1, numKey);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			int num = rs.getInt("num");
+			String name = rs.getString("name");
+			int age = rs.getInt("age");
+			String gender = rs.getString("gender");
+			String birth = rs.getString("birth");
+		}
+		System.out.print("수정하려는 정보를 선택해 주세요.\n1.이름 2.나이 3.성별 4.생년월일\n>>");
+		menu = Integer.parseInt(sc.nextLine()); 
+		String sqlUpdate = "update person set name=?, age=?, gender=?, birth=? where num=?";
+			switch(menu) {
+			case 1:
+				sql = "update person set name=? where num=?";
+				System.out.print("새로운 이름 입력 >> ");
+				String name = sc.nextLine();
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, name);
+				ps.setInt(2, numKey);
+				ps.executeUpdate();
+				break;
+			case 2:
+				sql = "update person set age=? where num=?";
+			    System.out.print("새로운 나이 입력 >> ");
+				int age = Integer.parseInt(sc.nextLine());
+				ps = conn.prepareStatement(sql);
+				ps.setInt(1, age);
+				ps.setInt(2, numKey);
+				ps.executeUpdate();
+				break;
+			case 3:
+				sql = "update person set gender=? where num=?";
+			    System.out.print("새로운 성별 입력 >> ");
+				String gender = sc.nextLine();
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, gender);
+				ps.setInt(2, numKey);
+				ps.executeUpdate();
+				break;
+			case 4:
+				sql = "update person set birth=? where num=?";
+				System.out.print("새로운 생년월일(yyyy-mm-dd) 입력 >> ");
+				String birth = sc.nextLine();
+				ps = conn.prepareStatement(sql);
+				ps.setString(1, birth);
+				ps.setInt(2, numKey);
+				ps.executeUpdate();
+				break;
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void deleteData() {//정보 삭제
+	public void deleteData(String name) {//정보 삭제
 		getConnect();
 		String sql = "delete from person where name = ?";
 		try {
 			ps = conn.prepareStatement(sql);
-			System.out.print("삭제할 정보의 이름을 입력해주세요.\n>>");
-			String name = sc.nextLine();
+			
 			ps.setString(1, name);
 			int cnt = ps.executeUpdate();
 			if(cnt==1) System.out.println("삭제가 완료되었습니다.");
@@ -114,33 +179,17 @@ public class PersonDao { //DB
 		}
 	}
 	
-	public void insertData() { //정보 추가 아직 정렬은 안됨
+	public void insertData(String name, int age, String gender, String birth) { //정보 추가 아직 정렬은 안됨
 		getConnect();
 		String sql = "insert into person values(perseq.nextval,?,?,?,?)";
-		System.out.println("추가할 정보를 입력해주세요");
-		String name ="";
-		while(true) {
-			
-			System.out.print("이름(중복 불가)\n>>");
-			name = sc.nextLine();
-			
-			if(isNameExists(name)) 
-				System.out.println("이미 존재하는 이름입니다. 다시 입력해주세요.");
-			else break;
-		}
 		
-		System.out.print("나이\n>>");
-		int age = Integer.parseInt(sc.nextLine());
-		System.out.print("성별(남자/여자)\n>>");
-		String gender = sc.nextLine();
-		System.out.print("생일(yyyy-mm-dd)\n#default 입력시 기본값으로 현재 날짜가 입력됩니다.\n>>");
-		String birth = sc.nextLine();
+		if(birth.equals("default")) sql = "insert into person values(perseq.nextval,?,?,?,default)";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, name);
 			ps.setInt(2, age);
 			ps.setString(3, gender);
-			ps.setString(4, birth);
+			if(!birth.equals("default")) ps.setString(4, birth);
 			ps.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -200,5 +249,23 @@ public class PersonDao { //DB
         return false;
     }
 	
+	public PersonBean getPersonByNum(int numKey) {
+	    PersonBean pb = null;
+	    String sql = "select * from person where num = ?";
+	    
+	    try (Connection conn = DriverManager.getConnection(url, id, pw);
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
+	        ps.setInt(1, numKey);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            ArrayList<PersonBean> list = toPersonList(rs);
+	            if (!list.isEmpty()) {
+	                pb = list.get(0); 
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return pb; 
+	}
 }

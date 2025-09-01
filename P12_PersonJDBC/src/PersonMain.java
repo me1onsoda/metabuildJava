@@ -32,22 +32,48 @@ public class PersonMain {
 				break;
 				
 			case 2: //성별로조회
-				ArrayList<PersonBean> dataByGender = pdao.getPersonByGender();
+				System.out.print("조회하고싶은 성별을 입력해주세요.(남자/여자)\n>>");
+				String inputGender = sc.nextLine();
+				ArrayList<PersonBean> dataByGender = pdao.getPersonByGender(inputGender);
 				for(PersonBean g : dataByGender) {
 					g.displayData();
 				}
 				break;
 				
 			case 3: //정보수정
+				
 				pdao.updateData();
 				break;
 				
 			case 4: //정보삭제
-				pdao.deleteData();
+				System.out.print("삭제할 정보의 이름을 입력해주세요.\n>>");
+				String name = sc.nextLine();
+				if(!pdao.isNameExists(name)) {
+					System.out.println("존재하지 않는 이름입니다."); 
+					break;
+				}
+				pdao.deleteData(name);
 				break;
 				
 			case 5: //정보추가
-				pdao.insertData();
+				System.out.println("추가할 정보를 입력해주세요");
+				String nameInput ="";
+				while(true) {
+					
+					System.out.print("이름(중복 불가)\n>>");
+					nameInput = sc.nextLine();
+					
+					if(pdao.isNameExists(nameInput)) 
+						System.out.println("이미 존재하는 이름입니다. 다시 입력해주세요.");
+					else break;
+				}
+				System.out.print("나이\n>>");
+				int age = Integer.parseInt(sc.nextLine());
+				System.out.print("성별(남자/여자)\n>>");
+				String gender = sc.nextLine();
+				System.out.print("생년월일(yyyy-mm-dd)\n#default 입력시 기본값으로 현재 날짜가 입력됩니다.\n>>");
+				String birth = sc.nextLine(); 
+				pdao.insertData(nameInput, age, gender, birth);
 //				ArrayList<PersonBean> afterInsrtData = pdao.getAllPerson();
 //				for(PersonBean afterInsert : afterInsrtData) {
 //					afterInsert.displayData();
