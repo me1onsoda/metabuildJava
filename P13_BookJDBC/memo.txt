@@ -39,3 +39,6 @@ DTO(data transfer object)
 bean, vo(value object)
 데이터 전달을 위해 만들어진 오브젝트
 데이터를 담을 private변수와 그 변수를 조작하는 메서드를 가짐
+
+
+

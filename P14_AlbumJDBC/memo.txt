@@ -52,3 +52,7 @@ commit;
  col singer for a10;
  col company for a10;
 select * from albums;
+
+
+
+select num,song,singer,company,price, rank from(select num,song,singer,company,price,rank() over(order by price desc) as rank from albums) where rank between 2 and 4;

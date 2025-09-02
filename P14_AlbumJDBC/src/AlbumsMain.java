@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class AlbumsMain {
 				menu=Integer.parseInt(sc.nextLine());
 
 			} catch (InputMismatchException | NumberFormatException e) {
-				System.out.println("잘못된 입력입니다. 숫자(1~6)을 입력해주세요.");
+				System.out.println("잘못된 입력입니다. 숫자(1~9)을 입력해주세요.");
 				continue;
 			}
 
@@ -40,15 +41,91 @@ public class AlbumsMain {
 				insertAlbum();
 				break;
 			case 6:
+				getAlbumByRange();
+				break;
+			case 7:
+				align();
+				break;
+			case 8:
+				group();
+				break;
+			case 9:
 				System.out.println("프로그램을 종료합니다.");
 				System.exit(0);
 			default: 
-				System.out.println("메뉴에 없는 번호입니다. 1~6 사이의 숫자를 입력해주세요.");
+				System.out.println("메뉴에 없는 번호입니다. 1~9 사이의 숫자를 입력해주세요.");
 				break;
 			}
 		}
 
 	}
+
+
+	private void group() {
+		System.out.println("그룹화할 회사명을 입력해주세요.");
+		String company = sc.nextLine();
+		AlbumsBean ab = new AlbumsBean();
+		
+		ab = adao.group(company);
+		if(ab==null) {
+			System.out.println("없는 회사입니다.");
+			return;
+		}
+		System.out.println("회사명\t일뱀가격평균");
+		System.out.println(ab.getCompany()+"\t"+ab.getPrice());
+	}
+
+	private void align() {
+		System.out.println("정렬할 기준을 선택해 주세요.");
+		System.out.print("1.번호 2.제목 3.가수명 \n>>");
+		int menu=0;
+		try {
+			menu=Integer.parseInt(sc.nextLine());
+
+		} catch (InputMismatchException | NumberFormatException e) {
+			System.out.println("잘못된 입력입니다. 숫자(1~3)을 입력해주세요.");
+			return;
+		}
+		String column = "";
+		switch(menu) {
+		case 1:
+			column = "num";
+			break;
+		case 2:
+			column = "song";
+			break;
+		case 3:
+			column = "singer";
+			break;
+		default: 
+			System.out.println("메뉴에 없는 번호입니다. 1~3 사이의 숫자를 입력해주세요.");
+			return;
+		}
+		int orderWay=0;
+		String way ="";
+		while(true) {
+			System.out.println("정렬 방법을 선택해 주세요.");
+			System.out.print("1.오름차순 2.내림차순 \n>>");
+			try {
+				orderWay=Integer.parseInt(sc.nextLine());
+				
+			} catch (InputMismatchException | NumberFormatException e) {
+				System.out.println("잘못된 입력입니다. 숫자(1~2)을 입력해주세요.");
+				continue;
+			}
+			if(orderWay ==1 ) {way="asc"; break;}
+			if(orderWay ==2 ) {way="desc"; break;}
+			else System.out.println("잘못된 입력입니다. 숫자(1~2)을 입력해주세요.");
+			
+		}
+		
+		for(AlbumsBean align : adao.align(column, way)) {
+			align.displayData();
+		}
+		
+	}
+
+	
 
 	private void insertAlbum() {
 		System.out.print("앨범 이름을 입력해주세요.\n>>");
@@ -143,14 +220,32 @@ public class AlbumsMain {
 
 	}
 
+	private void getAlbumByRange() {
+		System.out.print("시작 등수\n>>");
+		int from = Integer.parseInt(sc.nextLine());
+
+		System.out.print("끝 등수\n>>");
+		int to = Integer.parseInt(sc.nextLine());
+
+		for(AlbumsBean range : adao.getAlbumByRange(from, to)) {
+			System.out.print(range.getRank()+",");
+			range.displayData();
+		}
+
+	}
+
+
 	private void displayMenu() {
 		System.out.println("====메뉴선택하기=====");
-		System.out.println("1.전체 정보 조회");
+		System.out.println("1.전체 앨범 조회");
 		System.out.println("2.조건 조회");
-		System.out.println("3.정보 수정");
-		System.out.println("4.정보 삭제");
-		System.out.println("5.정보 추가");
-		System.out.println("6.프로그램 종료");
+		System.out.println("3.앨범 수정");
+		System.out.println("4.앨범 삭제");
+		System.out.println("5.앨범 추가");
+		System.out.println("6.가격 순위 범위 조회");
+		System.out.println("7.정렬 조회");
+		System.out.println("8.그룹화");
+		System.out.println("9.프로그램 종료");
 		System.out.print(">>");	
 	}
 

@@ -38,10 +38,17 @@ public class AlbumsDao {
 				String singer = rs.getString("singer");
 				String company = rs.getString("company");
 				int price = rs.getInt("price");
-				String pub_day = rs.getString("pub_day");
+				String pub_day = String.valueOf(rs.getDate("pub_day"));
 				AlbumsBean ab = new AlbumsBean(num, song, singer, company, price, pub_day);
 
+				try {
+					int rank = rs.getInt("rank");
+					ab.setRank(rank);
+				}catch (SQLException e) {
+//					e.printStackTrace();
+				}
 				abList.add(ab);
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -99,7 +106,6 @@ public class AlbumsDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs!= null) rs.close();
 				if(ps!= null) ps.close();
 				if(conn!= null) conn.close();
 			} catch (SQLException e) {
@@ -145,10 +151,10 @@ public class AlbumsDao {
 	public ArrayList<AlbumsBean> getDataBySearch(String column,String searchWord) {
 		getConnect();
 		ArrayList<AlbumsBean> abList = new ArrayList<>();
-		String sql = "select * from albums where "+column+" like ?";
+		String sql = "select * from albums where LOWER("+column+") like ?";
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, "%"+searchWord+"%");
+			ps.setString(1, "%"+searchWord.toLowerCase()+"%");
 			rs = ps.executeQuery();
 			abList = toAlbumList(rs);
 
@@ -188,6 +194,80 @@ public class AlbumsDao {
 		}
 		if(abList.size()==0) return null;
 		return abList.get(0);
+	}
+	
+	public ArrayList<AlbumsBean> getAlbumByRange(int from, int to){
+		ArrayList<AlbumsBean> abList = new ArrayList<>();
+		getConnect();
+		String sql = "select num,song,singer,company,price,pub_day, rank from(select num,song,singer,company,price,pub_day,rank() over(order by price desc) as rank from albums) where rank between ? and ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, from);
+			ps.setInt(2, to);
+			rs = ps.executeQuery();
+			abList = toAlbumList(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps!=null) ps.close();
+				if(rs!=null) rs.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return abList;
+		
+	}
+
+	public ArrayList<AlbumsBean> align(String column, String way) {
+		ArrayList<AlbumsBean> abList = new ArrayList<>();
+		getConnect();
+		String sql = "select* from albums order by "+column+" "+way;
+		try {
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			abList = toAlbumList(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps!=null) ps.close();
+				if(rs!=null) rs.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return abList;
+		
+		
+	}
+
+	public AlbumsBean group(String inputCompany) {
+		getConnect();
+		String sql = "select company, avg(price) as avgPrice from albums group by company having company like ?";
+		
+		AlbumsBean ab = null;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, inputCompany);
+			rs = ps.executeQuery();
+			if(rs.next()) {
+				String company = rs.getString("company");
+				int avgPrice = rs.getInt("avgPrice");
+				ab = new AlbumsBean();
+				ab.setCompany(company);
+				ab.setPrice(avgPrice);
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ab;
 	}
 
 

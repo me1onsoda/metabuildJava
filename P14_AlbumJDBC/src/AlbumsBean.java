@@ -6,6 +6,7 @@ public class AlbumsBean {
 	private String company;
 	private int price;
 	private String pub_day;
+	private int rank;
 	
 	public AlbumsBean() {}
 	
@@ -59,6 +60,19 @@ public class AlbumsBean {
 
 	public void displayData() {
 		System.out.println( num+","+song+","+singer+","+company+","+price+","+pub_day);
+	}
+
+	public void displayDataByRank() {
+		System.out.println( rank+","+num+","+song+","+singer+","+company+","+price+","+pub_day);
+		
+	}
+	
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 	
 	

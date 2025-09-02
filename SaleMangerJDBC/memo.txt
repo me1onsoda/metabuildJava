@@ -1,0 +1,47 @@
+
+create table products(
+	product_id number primary key,
+	product_name varchar2(50) not null,
+	price number not null,
+	stock_quantity number default 0
+);
+
+create sequence products_seq
+	increment by 1
+	start with 1
+	minvalue 1
+	nocache;
+
+
+INSERT INTO PRODUCTS (product_id, product_name, price, stock_quantity) VALUES (products_seq.nextval, '헤드폰', 350000, 50);
+INSERT INTO PRODUCTS (product_id, product_name, price, stock_quantity) VALUES (products_seq.nextval, '무선 키보드', 180000, 100);
+INSERT INTO PRODUCTS (product_id, product_name, price, stock_quantity) VALUES (products_seq.nextval, '4K 웹캡', 125000, 75);
+INSERT INTO PRODUCTS (product_id, product_name, price, stock_quantity) VALUES (products_seq.nextval, '4K 무선 마우스', 68000, 150);
+INSERT INTO PRODUCTS (product_id, product_name, price, stock_quantity) VALUES (products_seq.nextval, '허브', 45000, 200);
+
+
+
+drop table sales;
+create table sales(
+	sale_id number primary key,
+	product_id number references products(product_id),
+	quantity number not null,
+	sale_date date default sysdate
+);
+
+create sequence sales_seq
+	increment by 1
+	start with 1
+	minvalue 1
+	nocache;
+	
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 4, 2, TO_DATE('2024-11-05', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 2, 1, TO_DATE('2024-12-18', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 5, 5, TO_DATE('2025-01-20', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 1, 3, TO_DATE('2025-02-10', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 3, 1, TO_DATE('2025-03-15', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 2, 4, TO_DATE('2025-04-22', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 5, 3, TO_DATE('2025-06-01', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 1, 1, TO_DATE('2025-07-19', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 4, 2, TO_DATE('2025-08-05', 'YYYY-MM-DD'));
+INSERT INTO SALES (sale_id, product_id, quantity, sale_date) VALUES (sales_seq.nextval, 2, 3, TO_DATE('2025-09-02', 'YYYY-MM-DD'));
